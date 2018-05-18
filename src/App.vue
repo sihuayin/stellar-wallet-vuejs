@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import './assets/styles/iconfont.css'
 export default {
   name: 'App'
 }
@@ -14,5 +15,6 @@ export default {
 
 <style>
 #app {
+  overflow: hidden;
 }
 </style>
