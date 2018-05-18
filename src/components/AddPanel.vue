@@ -10,8 +10,8 @@
       <div class="column">
         <h2 class="blue-text">已有账户?</h2>
         <p class="sub-title">输入密钥解锁</p>
-        <div class="key-area">
-          <div class="key-input fn-flex">
+        <div class="form-area">
+          <div class="form-input fn-flex">
             <i class="iconfont icon-suo"></i>
             <span>密钥</span>
             <input type="text" v-model="secretKey" />
@@ -25,13 +25,13 @@
       <div class="column-no">
         <h2>还没有账户?</h2>
         <p class="sub-title">创建一个</p>
-        <div class="key-area" v-if="showKey">
-          <div class="key-input fn-flex">
+        <div class="form-area" v-if="showKey">
+          <div class="form-input fn-flex">
             <i class="iconfont icon-wallet"></i>
             <span>公钥</span>
             <input type="text" readonly v-model="publicKey" />
           </div>
-          <div class="key-input fn-flex">
+          <div class="form-input fn-flex">
             <i class="iconfont icon-suo"></i>
             <span>私钥</span>
             <input type="text" readonly v-model="secretKey" />
@@ -122,17 +122,17 @@ export default {
   .column-no{padding: 3em 6em; border-top: 1px solid #f3f3f3;}
   h2{margin-bottom: 0.625em; font-size: 1.25em;}
   .sub-title{color: #9e9e9e;}
-  .key-area{margin-top: 2em;}
-  .key-input{margin-bottom: 2em;}
-  .key-input .iconfont{margin-right: 0.15em; font-size: 1.625em; color: #888;}
-  .key-input input{flex-grow: 1; padding: 0.25em 0.5em; margin-top: 0.5em; background-color: transparent; border-bottom: 1px solid #a5a5a5; font-size: 1.125em;}
-  .key-input span{padding-top: 0.35em; margin-right: 0.5em; font-size: 1.125em;}
+  .form-area{margin-top: 2em;}
+  .form-input{margin-bottom: 2em;}
+  .form-input .iconfont{margin-right: 0.15em; font-size: 1.625em; color: #888;}
+  .form-input input{flex-grow: 1; padding: 0.25em 0.5em; margin-top: 0.5em; background-color: transparent; border-bottom: 1px solid #a5a5a5; font-size: 1.125em;}
+  .form-input span{padding-top: 0.35em; margin-right: 0.5em; font-size: 1.125em;}
   .action{margin-top: 2em;}
 
   @media screen and (max-width: 480px) {
     .column{padding: 1.5em 0.625em;}
     .column-no{padding: 1.5em 0.625em;}
-    .key-input{flex-wrap: wrap;}
-    .key-input input{display: block; width: 100%;}
+    .form-input{flex-wrap: wrap;}
+    .form-input input{display: block; width: 100%;}
   }
 </style>

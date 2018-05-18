@@ -1,9 +1,8 @@
 <template>
   <div>
-    <div>最近交易记录</div>
     <mt-loadmore :top-method="loadTop" @top-status-change="handleTopChange">
-      <div v-if="list.length < 1">
-        暂无交易
+      <div v-if="list.length < 1" class="no-data">
+        暂无交易记录
       </div>
       <ul v-else>
         <li v-for="(item, index) in list" :key="index">
@@ -70,5 +69,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .no-data{padding: 3em 0; text-align: center; color: #9e9e9e; font-size: 0.875em;}
 </style>

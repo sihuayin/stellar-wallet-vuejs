@@ -1,16 +1,26 @@
 <template>
   <div>
-    <h5>转账</h5>
-    <p>你可以使用 public address，email地址 或者 federatd 地址</p>
-    <mt-field label="To" placeholder="接收者地址" v-model="receiver"></mt-field>
-    <mt-field label="Amount" placeholder="金额" v-model="amount"></mt-field>
-    <div>
-      <select v-model="asset">
-        <option>XLM</option>
-      </select>
+    <p class="gray-text">你可以使用public address，email地址或者federatd地址</p>
+    <div class="form-area">
+      <div class="form-input fn-flex">
+        <span>支付给</span>
+        <input type="text" v-model="receiver" />
+      </div>
+      <div class="form-input fn-flex">
+        <span>说明</span>
+        <input type="text" v-model="message" />
+      </div>
+      <div class="form-input fn-flex form-amount">
+        <span>金额</span>
+        <input type="text" v-model="amount" />
+        <select v-model="asset">
+          <option>XLM</option>
+        </select>
+      </div>
     </div>
-
-    <mt-button type="primary" v-on:click="send">发送</mt-button>
+    <div class="action">
+      <button type="button" v-on:click="send" class="ui-btn">发送</button>
+    </div>
   </div>
 </template>
 
@@ -59,5 +69,12 @@ export default {
 </script>
 
 <style scoped>
-
+  .form-area{margin-top: 1em;}
+  .form-input{margin-bottom: 1em;}
+  .form-input .iconfont{margin-right: 0.15em; font-size: 1.625em; color: #888;}
+  .form-input input{flex-grow: 1; padding: 0.25em 0.5em; margin-top: 0.5em; background-color: transparent; border-bottom: 1px solid #a5a5a5; font-size: 1.125em;}
+  .form-input span{padding-top: 0.35em; width: 4em;}
+  .form-amount input{flex-grow: 0;}
+  .form-amount select{margin-left: 1em; height: 2.25em;}
+  .action{margin-top: 2em;}
 </style>
