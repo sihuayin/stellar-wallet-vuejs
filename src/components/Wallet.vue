@@ -5,7 +5,7 @@
       <div class="navbar fn-flex">
         <div class="navbar-left fn-flex">
           <i class="iconfont icon-wallet logo"></i>
-          <h1 v-bind:title={{ wallet && wallet.name || '未命名'}}></h1>
+          <h1>{{ wallet && wallet.name || '未命名'}}</h1>
         </div>
         <div class="navbar-right">
           <div class="navbar-right-select" v-on:click="showPop">管理<i class="iconfont icon-list"></i></div>
@@ -89,7 +89,7 @@ export default {
     this.loadAccound()
 
     // 监听变更
-    var server = sdk.getServer();
+    var server = sdk.getServer()
     server.payments()
       .cursor('now')
       .forAccount(wallet.publicKey)
@@ -107,7 +107,7 @@ export default {
     ]),
 
     showPop: function () {
-      this.showTools = !this.showTools;
+      this.showTools = !this.showTools
     },
     askForSomeLumens: function () {
       sdk.whoIsYourDaddy(this.publicKey)
@@ -156,9 +156,6 @@ export default {
   .tips{box-sizing: border-box; max-width: 60em; margin: 0 auto; padding: 0.75em;}
   .tips p{font-size: 0.875em;}
   .content{box-sizing: border-box; max-width: 60em; margin: 0 auto; padding: 2em; background-color: #fff;}
-
-
-
   .page-popup .mint-popup-3 {
       width: 100%;
       height: 100%;
