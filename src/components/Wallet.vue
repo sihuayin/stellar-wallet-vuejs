@@ -8,7 +8,7 @@
       <div>收款地址: {{ publicKey }}</div>
       <p v-if="!isOnlineAccount">您的账户还未被网络记录，你需要发送至少20个lumens (XLM)到这个账户.</p>
 
-      <mt-button type="default" v-on:click="askForSomeLumens">叫爸爸</mt-button>
+      <mt-button v-if="isTest" type="default" v-on:click="askForSomeLumens">叫爸爸</mt-button>
       <div>
         <mt-button type="primary" v-on:click="showWalletSend">转账</mt-button>
       </div>
@@ -51,8 +51,8 @@ import { Toast } from 'mint-ui'
 import TransactionList from './TransactionList.vue'
 import WalletSend from './WalletSend'
 import LeftSide from './LeftSide'
-import request from 'superagent'
 import sdk from '../libs/sdk'
+import storage from '../libs/storage'
 
 export default {
   name: 'Wallet',
@@ -69,13 +69,16 @@ export default {
     WalletSend
   },
   created: function () {
-    var wallet = this.wallet
     var that = this
+    var wallets = storage.getAllWallets()
+    this.setWallets(wallets)
+
+    var wallet = storage.getActiveWallet()
     if (!wallet) {
       return this.$router.go(-1)
     }
     this.publicKey = wallet.publicKey
-    this.loadAccound(wallet)
+    this.loadAccound()
 
     // 监听变更
     var server = sdk.getServer()
@@ -85,25 +88,28 @@ export default {
       .stream({
         onmessage: function (message) {
           console.log(message)
-          that.loadAccound(wallet)
+          that.loadAccound()
         }
       })
   },
   methods: {
     ...mapActions([
-      'loadAccound'
+      'loadAccound',
+      'setWallets'
     ]),
 
     showPop: function () {
       this.popupVisible = true
     },
     askForSomeLumens: function () {
-      request.get('http://47.75.60.214:8004').query({ addr: this.publicKey }).then(function (res) {
-        Toast('好朋友给你赠送了1000个lumens，请查收!')
-        this.loadAccound()
-      }).catch(function () {
-        Toast('要钱没有，要命一条')
-      })
+      sdk.whoIsYourDaddy(this.publicKey)
+        .then((res) => {
+          Toast('好朋友给你赠送了1000个lumens，请查收!')
+          this.loadAccound()
+        })
+        .catch(function () {
+          Toast('要钱没有，要命一条')
+        })
     },
 
     showWalletSend: function () {
@@ -117,7 +123,8 @@ export default {
       valueTypes: ['Coinmarketcap', 'Kraken'],
       wallets: [],
       popupVisible: false,
-      walletSend: false
+      walletSend: false,
+      isTest: sdk.isTest()
     }
   }
 }

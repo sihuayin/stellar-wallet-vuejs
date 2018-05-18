@@ -3,13 +3,25 @@
     <h5>转账</h5>
     <p>你可以使用 public address，email地址 或者 federatd 地址</p>
     <mt-field label="To" placeholder="接收者地址" v-model="receiver"></mt-field>
-    <mt-field label="Amount" placeholder="金额" v-model="amount"></mt-field>
+
     <div>
+      <mt-field label="Amount" placeholder="金额" v-model="amount"></mt-field>
       <select v-model="asset">
         <option>XLM</option>
       </select>
     </div>
 
+    <div>
+      <label>Memo type</label>
+      <select v-model="memoType">
+        <option value="MEMO_TEXT">MEMO_TEXT</option>
+        <option value="MEMO_ID">MEMO_ID</option>
+        <option value="MEMO_HASH">MEMO_HASH</option>
+        <option value="MEMO_RETURN">MEMO_RETURN</option>
+      </select>
+
+      <mt-field label="Memo value" placeholder="memo value" v-model="memoValue"></mt-field>
+    </div>
     <mt-button type="primary" v-on:click="send">发送</mt-button>
   </div>
 </template>
@@ -24,7 +36,9 @@ export default {
     return {
       receiver: '',
       amount: 0,
-      asset: 'XLM'
+      asset: 'XLM',
+      memoType: '',
+      memoValue: ''
     }
   },
 
@@ -51,7 +65,9 @@ export default {
           account_id: this.receiver
         },
         asset: 'XLM',
-        amount: this.amount
+        amount: this.amount,
+        memo: this.memoValue,
+        memo_type: this.memoType
       })
     }
   }

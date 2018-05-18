@@ -8,6 +8,20 @@ export default {
     store.set('activew', JSON.stringify(activeWallet))
   },
 
+  getActiveWallet: function () {
+    var wallets = this.getAllWallets()
+    if (!wallets || wallets.length < 1) {
+      return null
+    }
+
+    for (var i = 0; i < wallets.length; i++) {
+      if (wallets[i].active) {
+        return wallets[i]
+      }
+    }
+
+    return null
+  },
   getAllWallets: function () {
     var wallets = store.get('actives')
     if (wallets) {

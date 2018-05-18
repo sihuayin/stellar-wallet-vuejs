@@ -15,7 +15,8 @@ Vue.use(Mint)
 sdk.init()
 
 function requireAuth (route, redirect, next) {
-  if (!storage.getAllWallets()) {
+  var wallets = storage.getAllWallets()
+  if (!wallets || wallets.length < 1) {
     next('/unlock')
   } else {
     next()
