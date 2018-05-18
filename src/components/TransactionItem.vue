@@ -1,7 +1,11 @@
 <template>
-  <div>{{ date }} <a href="#">{{ key }}</a> - {{ action }} - {{ amount | formatLumens }}[{{ asset }}]
-  <p>{{ memo_type }} -- {{ memo }}</p>
-</div>
+  <tr>
+    <td>{{ date }}</td>
+    <td>{{ action }}</td>
+    <td class="fn-break"><a href="#">{{ key }}</a></td>
+    <td>{{ amount | formatLumens }} [{{ asset }}]</td>
+    <td>{{ memo }}：{{ memo_type }}</td>
+  </tr>
 </template>
 
 <script>
@@ -92,5 +96,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  .fn-break{white-space:normal; word-break:break-all;}
 </style>

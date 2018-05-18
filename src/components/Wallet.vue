@@ -1,11 +1,10 @@
 <template>
   <div class="container">
-
     <div class="head">
       <div class="navbar fn-flex">
         <div class="navbar-left fn-flex">
           <i class="iconfont icon-wallet logo"></i>
-          <h1 v-bind:title={{ wallet && wallet.name || '未命名'}}></h1>
+          <h1>{{ wallet && wallet.name || '未命名'}}</h1>
         </div>
         <div class="navbar-right">
           <div class="navbar-right-select" v-on:click="showPop">管理<i class="iconfont icon-list"></i></div>
@@ -17,7 +16,6 @@
             </ul>
           </div>
         </div>
-
       </div>
     </div>
     <div class="tips" v-if="!isOnlineAccount"><p>您的账户还未被网络记录，你需要发送至少20个lumens (XLM)到这个账户。</p></div>
@@ -93,7 +91,7 @@ export default {
     this.loadAccound()
 
     // 监听变更
-    var server = sdk.getServer();
+    var server = sdk.getServer()
     server.payments()
       .cursor('now')
       .forAccount(wallet.publicKey)
@@ -111,7 +109,7 @@ export default {
     ]),
 
     showPop: function () {
-      this.showTools = !this.showTools;
+      this.showTools = !this.showTools
     },
     askForSomeLumens: function () {
       sdk.whoIsYourDaddy(this.publicKey)
@@ -145,7 +143,7 @@ export default {
       showTab: 'receive',
       classTab: function (name) {
         return {
-          active: this.showTab == name,
+          active: this.showTab === name
         }
       }
     }
@@ -170,7 +168,7 @@ export default {
 
   .tips{box-sizing: border-box; max-width: 60em; margin: 0 auto; padding: 0.75em;}
   .tips p{font-size: 0.875em;}
-  .content{box-sizing: border-box; max-width: 60em; margin: 0 auto; padding: 2em; background-color: #fff;}
+  .content{box-sizing: border-box; max-width: 60em; margin: 0 auto; padding: 2em 1em; background-color: #fff;}
   .wallet-con .blue-text{font-size: 1.25em; line-height: 150%;}
   .wallet-con li{padding-bottom: 0.5em;}
   .wallet-con .num{font-size: 2em; line-height: 120%;}
@@ -180,23 +178,9 @@ export default {
   .wallet-receive .gray-text{font-size: 0.875em;}
 
   .walletHistory{margin-top: 3em;}
-  .column-title{margin-bottom: 1em; padding: 0.5em 1em; border-left: 3px solid #2196f3; background-color: #f5f5f5; font-size: 1.125em;}
-
-  .page-popup .mint-popup-3 {
-      width: 100%;
-      height: 100%;
-      background-color: #fff;
-  }
-  .page-popup .mint-popup-3 .mint-button {
-      position: absolute;
-      width: 90%;
-      top: 50%;
-      left: 5%;
-      -webkit-transform: translateY(-50%);
-              transform: translateY(-50%);
-  }
+  .column-title{margin-bottom: 1em; padding: 0.5em 1em; border-left: 3px solid #2196f3; background-color: #f0f0f0; font-size: 1.125em;}
 
   @media screen and (max-width: 480px) {
-
+    .content{padding: 1.5em 0.625em;}
   }
 </style>

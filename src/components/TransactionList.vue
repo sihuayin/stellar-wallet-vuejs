@@ -4,11 +4,22 @@
       <div v-if="list.length < 1" class="no-data">
         暂无交易记录
       </div>
-      <ul v-else>
-        <li v-for="(item, index) in list" :key="index">
+      <div class="" v-else>
+        <table>
+          <thead>
+          <tr>
+            <th width="10%">时间</th>
+            <th width="10%">收支类型</th>
+            <th width="40%">地址</th>
+            <th width="10%">金额</th>
+            <th>说明</th>
+          </tr>
+          </thead>
+          <tbody v-for="(item, index) in list" :key="index">
           <TransactionItem v-bind:item="item" v-bind:transaction_id="item._links.transaction.href | cultHref"/>
-        </li>
-      </ul>
+          </tbody>
+        </table>
+      </div>
       <div slot="top" class="mint-loadmore-top">
         <span v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">↓</span>
         <span v-show="topStatus === 'loading'">Loading...</span>

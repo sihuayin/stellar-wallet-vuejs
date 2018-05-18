@@ -96,9 +96,9 @@ export default {
       this.$emit('onComplete')
     },
     generateKeypair: function () {
-      var keypair = StellarSdk.Keypair.random();
-      this.publicKey = keypair.publicKey();
-      this.secretKey = keypair.secret();
+      var keypair = StellarSdk.Keypair.random()
+      this.publicKey = keypair.publicKey()
+      this.secretKey = keypair.secret()
       this.showKey = true
     }
   },
