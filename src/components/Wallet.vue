@@ -1,10 +1,11 @@
 <template>
   <div class="container">
+
     <div class="head">
       <div class="navbar fn-flex">
         <div class="navbar-left fn-flex">
           <i class="iconfont icon-wallet logo"></i>
-          <h1>钱包</h1>
+          <h1 v-bind:title={{ wallet && wallet.name || '未命名'}}></h1>
         </div>
         <div class="navbar-right">
           <div class="navbar-right-select" v-on:click="showPop">管理<i class="iconfont icon-list"></i></div>
@@ -16,6 +17,7 @@
             </ul>
           </div>
         </div>
+
       </div>
     </div>
     <div class="tips" v-if="!isOnlineAccount"><p>您的账户还未被网络记录，你需要发送至少20个lumens (XLM)到这个账户。</p></div>
@@ -61,8 +63,8 @@ import { Toast } from 'mint-ui'
 import TransactionList from './TransactionList.vue'
 import WalletSend from './WalletSend'
 import LeftSide from './LeftSide'
-import request from 'superagent'
 import sdk from '../libs/sdk'
+import storage from '../libs/storage'
 
 export default {
   name: 'Wallet',
@@ -79,13 +81,16 @@ export default {
     WalletSend
   },
   created: function () {
-    var wallet = this.wallet;
-    var that = this;
+    var that = this
+    var wallets = storage.getAllWallets()
+    this.setWallets(wallets)
+
+    var wallet = storage.getActiveWallet()
     if (!wallet) {
       return this.$router.go(-1)
     }
-    this.publicKey = wallet.publicKey;
-    this.loadAccound(wallet);
+    this.publicKey = wallet.publicKey
+    this.loadAccound()
 
     // 监听变更
     var server = sdk.getServer();
@@ -94,26 +99,29 @@ export default {
       .forAccount(wallet.publicKey)
       .stream({
         onmessage: function (message) {
-          console.log(message);
-          that.loadAccound(wallet)
+          console.log(message)
+          that.loadAccound()
         }
       })
   },
   methods: {
     ...mapActions([
-      'loadAccound'
+      'loadAccound',
+      'setWallets'
     ]),
 
     showPop: function () {
       this.showTools = !this.showTools;
     },
     askForSomeLumens: function () {
-      request.get('http://47.75.60.214:8004').query({ addr: this.publicKey }).then(function (res) {
-        Toast('好朋友给你赠送了1000个lumens，请查收!');
-        this.loadAccound()
-      }).catch(function () {
-        Toast('要钱没有，要命一条')
-      })
+      sdk.whoIsYourDaddy(this.publicKey)
+        .then((res) => {
+          Toast('好朋友给你赠送了1000个lumens，请查收!')
+          this.loadAccound()
+        })
+        .catch(function () {
+          Toast('要钱没有，要命一条')
+        })
     },
 
     showWalletSend: function () {
@@ -130,7 +138,9 @@ export default {
       valueType: 'Coinmarketcap',
       valueTypes: ['Coinmarketcap', 'Kraken'],
       wallets: [],
+      popupVisible: false,
       walletSend: false,
+      isTest: sdk.isTest(),
       showTools: false,
       showTab: 'receive',
       classTab: function (name) {

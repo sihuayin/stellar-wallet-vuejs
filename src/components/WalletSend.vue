@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <p class="gray-text">你可以使用public address，email地址或者federatd地址</p>
     <div class="form-area">
       <div class="form-input fn-flex">
@@ -21,6 +22,7 @@
     <div class="action">
       <button type="button" v-on:click="send" class="ui-btn">发送</button>
     </div>
+
   </div>
 </template>
 
@@ -34,7 +36,9 @@ export default {
     return {
       receiver: '',
       amount: 0,
-      asset: 'XLM'
+      asset: 'XLM',
+      memoType: '',
+      memoValue: ''
     }
   },
 
@@ -61,7 +65,9 @@ export default {
           account_id: this.receiver
         },
         asset: 'XLM',
-        amount: this.amount
+        amount: this.amount,
+        memo: this.memoValue,
+        memo_type: this.memoType
       })
     }
   }

@@ -52,8 +52,9 @@ const actions = {
     commit('setWallets', wallets)
   },
 
-  loadAccound ({ dispatch, state, commit }, wallet) {
+  loadAccound ({ dispatch, state, commit }) {
     var server = sdk.getServer()
+    var wallet = state.wallets.find(wallet => wallet.active)
     server.loadAccount(wallet.publicKey).then((data) => {
       // success = true
       commit('setAccount', data)
@@ -128,11 +129,23 @@ const actions = {
     commit('setWallets', wallets)
   },
 
-  updateWalletBySecretKey ({state, commit}, data) {
-    var index = state.wallets.findIndex(item => item.secretKey === func.encodeSecretKey(data.secretKey))
+  updateWalletBySecretKey ({dispatch, state, commit}, data) {
+    if (data.force) {
+      var wallets = JSON.parse(JSON.stringify(state.wallets))
+      for (var i = 0; i < wallets.length; i++) {
+        wallets[i].active = false
+      }
+    }
+
+    var index = wallets.findIndex(item => item.secretKey === func.encodeSecretKey(data.secretKey))
     if (index < 0) {
       commit('addWallet', data.wallet)
-      storage.setWallets(JSON.parse(JSON.stringify(state.wallets)))
+      wallets.push(data.wallet)
+      storage.setWallets(JSON.parse(JSON.stringify(wallets)))
+    } else {
+      wallets[index].active = true
+      commit('setWallets', wallets)
+      storage.setWallets(wallets)
     }
   },
 
@@ -146,28 +159,87 @@ const actions = {
     storage.setWallets(wallets)
   },
 
-  sendAccount ({state, commit}, data) {
+  sendAccount ({dispatch, state, commit}, data) {
     var activeWallet = state.wallets.find(wallet => wallet.active)
     if (!activeWallet) {
       return false
     }
-    var server = sdk.getServer()
-    var transaction = new StellarSdk.TransactionBuilder(state.account)
-      .addOperation(StellarSdk.Operation.payment({
-        destination: data.destination.account_id,
-        asset: StellarSdk.Asset.native(),
-        amount: data.amount
-      }))
-      .addMemo(StellarSdk.Memo.text('tet'))
-      .build()
 
-    transaction.sign(StellarSdk.Keypair.fromSecret(func.decodeSecretKey(activeWallet.secretKey)))
-    server.submitTransaction(transaction)
+    var memoType = data.memo ? data.memo_type : 'none'
+    var memo = data.memo
+    switch (memoType) {
+      case 'MEMO_TEXT':
+        memo = StellarSdk.Memo.text(memo)
+        break
+      case 'MEMO_HASH':
+        memo = StellarSdk.Memo.hash(memo)
+        break
+      case 'MEMO_ID':
+        memo = StellarSdk.Memo.id(memo)
+        break
+      case 'MEMO_RETURN':
+        memo = StellarSdk.Memo.returnHash(memo)
+        break
+      default:
+        memo = StellarSdk.Memo.none('')
+        break
+    }
+
+    var server = sdk.getServer()
+    server.loadAccount(data.destination.account_id)
+      .catch((res) => {
+        // 如果账户不存在，那么创建一个咯
+        dispatch('createAccount', {server, activeWallet, amount: data.amount, destination: data.destination, memo})
+        return false
+      })
+      .then((res) => {
+        return server.loadAccount(activeWallet.publicKey)
+      })
+      .then((sourceAccount) => {
+        var transaction = new StellarSdk.TransactionBuilder(sourceAccount)
+          .addOperation(StellarSdk.Operation.payment({
+            destination: data.destination.account_id,
+            asset: StellarSdk.Asset.native(),
+            amount: data.amount
+          }))
+          .addMemo(memo)
+          .build()
+        transaction.sign(StellarSdk.Keypair.fromSecret(func.decodeSecretKey(activeWallet.secretKey)))
+        return server.submitTransaction(transaction)
+      })
       .then((transactionResult) => {
-        console.log(transactionResult)
+        console.log('result: ', transactionResult)
       })
       .catch((e) => {
         console.log(e)
+      })
+  },
+
+  createAccount: ({state, commit}, data) => {
+    var server = sdk.getServer()
+    var activeWallet = state.wallets.find(wallet => wallet.active)
+    if (!activeWallet) {
+      return false
+    }
+
+    server.loadAccount(activeWallet.publicKey)
+      .then((sourceAccount) => {
+        var transaction = new StellarSdk.TransactionBuilder(sourceAccount)
+          .addOperation(StellarSdk.Operation.createAccount({
+            destination: data.destination.account_id,
+            startingBalance: data.amount + ''
+          }))
+          .addMemo(data.memo)
+          .build()
+
+        transaction.sign(StellarSdk.Keypair.fromSecret(func.decodeSecretKey(activeWallet.secretKey)))
+        return server.submitTransaction(transaction)
+      })
+      .then(() => {
+        Toast('转账成功')
+      })
+      .catch(() => {
+        Toast('创建账户失败')
       })
   }
 }

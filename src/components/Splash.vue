@@ -19,11 +19,11 @@ export default {
     Indicator.open('加载中...')
     var wallets = storage.getAllWallets()
     this.setWallets(wallets)
-    // var settings = storage.getSetting()
-    // todo 设置本地存储的设置
+
+    var wallet = storage.getActiveWallet()
     setTimeout(() => {
       Indicator.close()
-      if (this.wallet) {
+      if (wallet) {
         this.$router.push('/wallet')
       } else {
         this.$router.push('/unlock')

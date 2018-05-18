@@ -88,11 +88,11 @@ export default {
         publicKey: this.publicKey,
         secretKey: this.secretKey,
         active: true,
-        name: '钱包'
+        name: ''
       }
-      this.updateWalletBySecretKey({wallet: wallet, secretKey: this.secretKey});
-      this.secretKey = '';
-      this.publicKey = '';
+      this.updateWalletBySecretKey({wallet: wallet, secretKey: this.secretKey, force: true})
+      this.secretKey = ''
+      this.publicKey = ''
       this.$emit('onComplete')
     },
     generateKeypair: function () {
