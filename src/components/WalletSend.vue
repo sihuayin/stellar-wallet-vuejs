@@ -1,28 +1,34 @@
 <template>
   <div>
-    <h5>转账</h5>
-    <p>你可以使用 public address，email地址 或者 federatd 地址</p>
-    <mt-field label="To" placeholder="接收者地址" v-model="receiver"></mt-field>
 
-    <div>
-      <mt-field label="Amount" placeholder="金额" v-model="amount"></mt-field>
-      <select v-model="asset">
-        <option>XLM</option>
-      </select>
+    <p class="gray-text">你可以使用public address，email地址或者federatd地址</p>
+    <div class="form-area">
+      <div class="form-input fn-flex">
+        <span>支付给</span>
+        <input type="text" v-model="receiver" />
+      </div>
+      <div class="form-input fn-flex form-memo">
+        <span>说明</span>
+        <select v-model="memoType">
+          <option>MEMO_TEXT</option>
+          <option>MEMO_ID</option>
+          <option>MEMO_HASH</option>
+          <option>MEMO_RETURN</option>
+        </select>
+        <input type="text" v-model="memoValue" />
+      </div>
+      <div class="form-input fn-flex form-amount">
+        <span>金额</span>
+        <input type="text" v-model="amount" />
+        <select v-model="asset">
+          <option>XLM</option>
+        </select>
+      </div>
+    </div>
+    <div class="action">
+      <button type="button" v-on:click="send" class="ui-btn">发送</button>
     </div>
 
-    <div>
-      <label>Memo type</label>
-      <select v-model="memoType">
-        <option value="MEMO_TEXT">MEMO_TEXT</option>
-        <option value="MEMO_ID">MEMO_ID</option>
-        <option value="MEMO_HASH">MEMO_HASH</option>
-        <option value="MEMO_RETURN">MEMO_RETURN</option>
-      </select>
-
-      <mt-field label="Memo value" placeholder="memo value" v-model="memoValue"></mt-field>
-    </div>
-    <mt-button type="primary" v-on:click="send">发送</mt-button>
   </div>
 </template>
 
@@ -37,7 +43,7 @@ export default {
       receiver: '',
       amount: 0,
       asset: 'XLM',
-      memoType: '',
+      memoType: 'MEMO_TEXT',
       memoValue: ''
     }
   },
@@ -67,7 +73,7 @@ export default {
         asset: 'XLM',
         amount: this.amount,
         memo: this.memoValue,
-        memo_type: this.memoType
+        'memo_type': this.memoType
       })
     }
   }
@@ -75,5 +81,16 @@ export default {
 </script>
 
 <style scoped>
-
+  .form-area{margin-top: 1em;}
+  .form-input{margin-top: 1.5em; }
+  .form-input .iconfont{margin-right: 0.15em; font-size: 1.625em; color: #888;}
+  .form-input input{flex-grow: 1; padding: 0.35em 0.5em; background-color: transparent; border-bottom: 1px solid #a5a5a5; font-size: 1em;}
+  .form-input span{padding-top: 0.35em; width: 4em;}
+  .form-amount input{flex-grow: 0;}
+  .form-amount select{margin-left: 1em; height: 2.25em;}
+  .form-memo{flex-wrap: wrap; margin-top: 2em;}
+  .form-memo span{padding-top: 0;}
+  .form-memo select{height: 2.25em;}
+  .form-memo input{margin-top: 0.5em; margin-left: 4em; width: 100%;}
+  .action{margin-top: 2em;}
 </style>

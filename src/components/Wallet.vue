@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-
     <div class="head">
       <div class="navbar fn-flex">
         <div class="navbar-left fn-flex">
@@ -17,29 +16,32 @@
             </ul>
           </div>
         </div>
-
       </div>
     </div>
     <div class="tips" v-if="!isOnlineAccount"><p>您的账户还未被网络记录，你需要发送至少20个lumens (XLM)到这个账户。</p></div>
     <div class="content">
-      <ul class="">
+      <ul class="wallet-con">
         <li class="blue-text">{{ wallet && wallet.name || '未命名'}}</li>
-        <li>{{ balance }} XLM</li>
-        <li>{{ usdBalance }} USD</li>
+        <li class="num">{{ balance }} XLM</li>
+        <li class="cost">{{ usdBalance }} USD</li>
         <li><button type="button" v-on:click="askForSomeLumens" class="ui-btn">获取测试币</button></li>
       </ul>
-      <ul class="">
-        <li>收钱</li>
-        <li>转账</li>
+      <ul class="ui-tab wallet-tab fn-flex">
+        <li v-bind:class="classTab('receive')" v-on:click="changeTab('receive')"><a>收钱</a></li>
+        <li v-bind:class="classTab('send')" v-on:click="changeTab('send')"><a>转账</a></li>
       </ul>
-      <div class="">
-        <div>收款地址: {{ publicKey }}</div>
-        <div class="">
+      <div class="ui-tab-content">
+        <div class="wallet-receive" v-if="showTab == 'receive'">
+          <div class="address">收款地址：{{ publicKey }}</div>
+          <p class="gray-text">注：将收款地址提供给收款方即可</p>
+        </div>
+        <div class="wallet-send" v-if="showTab == 'send'">
           <WalletSend />
         </div>
       </div>
 
-      <div>
+      <div class="walletHistory">
+        <div class="column-title">交易记录</div>
         <TransactionList v-bind:publicKey="publicKey"/>
       </div>
     </div>
@@ -122,6 +124,10 @@ export default {
 
     showWalletSend: function () {
       this.walletSend = true
+    },
+
+    changeTab: function (name) {
+      this.showTab = name
     }
   },
   data () {
@@ -132,7 +138,14 @@ export default {
       wallets: [],
       popupVisible: false,
       walletSend: false,
-      isTest: sdk.isTest()
+      isTest: sdk.isTest(),
+      showTools: false,
+      showTab: 'receive',
+      classTab: function (name) {
+        return {
+          active: this.showTab === name
+        }
+      }
     }
   }
 }
@@ -155,6 +168,17 @@ export default {
 
   .tips{box-sizing: border-box; max-width: 60em; margin: 0 auto; padding: 0.75em;}
   .tips p{font-size: 0.875em;}
+  .content{box-sizing: border-box; max-width: 60em; margin: 0 auto; padding: 2em 1em; background-color: #fff;}
+  .wallet-con .blue-text{font-size: 1.25em; line-height: 150%;}
+  .wallet-con li{padding-bottom: 0.5em;}
+  .wallet-con .num{font-size: 2em; line-height: 120%;}
+  .wallet-con .cost{font-size: 1.25em; color: #9e9e9e;}
+
+  .wallet-receive .address{margin-bottom: 1em; white-space:normal; word-break:break-all;}
+  .wallet-receive .gray-text{font-size: 0.875em;}
+
+  .walletHistory{margin-top: 3em;}
+  .column-title{margin-bottom: 1em; padding: 0.5em 1em; border-left: 3px solid #2196f3; background-color: #f0f0f0; font-size: 1.125em;}
   .content{box-sizing: border-box; max-width: 60em; margin: 0 auto; padding: 2em; background-color: #fff;}
   .page-popup .mint-popup-3 {
       width: 100%;
@@ -169,8 +193,7 @@ export default {
       -webkit-transform: translateY(-50%);
               transform: translateY(-50%);
   }
-
   @media screen and (max-width: 480px) {
-
+    .content{padding: 1.5em 0.625em;}
   }
 </style>
