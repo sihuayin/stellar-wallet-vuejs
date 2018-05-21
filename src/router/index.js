@@ -4,6 +4,7 @@ import Unlock from '@/components/Unlock'
 import Wallet from '@/components/Wallet'
 import Splash from '@/components/Splash'
 import Setup from '@/components/Setup'
+import TransactionHistory from '@/components/TransactionHistory'
 import WalletList from '@/components/WalletList'
 import { install as Mint } from 'mint-ui/lib/index'
 import storage from '../libs/storage'
@@ -51,6 +52,12 @@ const router = new Router({
       path: '/setup',
       name: 'Setup',
       component: Setup,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/history',
+      name: 'History',
+      component: TransactionHistory,
       beforeEnter: requireAuth
     }
   ]

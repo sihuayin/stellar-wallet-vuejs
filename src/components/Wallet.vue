@@ -10,7 +10,7 @@
           <div class="navbar-right-select" v-on:click="showPop">管理<i class="iconfont icon-list"></i></div>
           <div class="tool-slide" v-if="showTools">
             <div class="tool-arrow"><i class="iconfont icon-arrow"></i></div>
-            <ul class="tool-list">
+            <ul class="tool-list" v-on-clickaway="away">
               <li><router-link to="/wallet_list" class="fn-flex"><span>管理钱包</span><i class="iconfont icon-angle"></i></router-link></li>
               <li><router-link to="/wallet_list" class="fn-flex"><span>设置</span><i class="iconfont icon-angle"></i></router-link></li>
             </ul>
@@ -24,8 +24,9 @@
         <li class="blue-text">{{ wallet && wallet.name || '未命名'}}</li>
         <li class="num">{{ balance }} XLM</li>
         <li class="cost">{{ usdBalance }} USD</li>
-        <li><button type="button" v-on:click="askForSomeLumens" class="ui-btn">获取测试币</button></li>
+        <li><button v-if="!isAsking" type="button" v-on:click="askForSomeLumens" class="ui-btn">获取测试币</button><mt-spinner :type="3" v-else></mt-spinner></li>
       </ul>
+      <p><router-link to="/history" class="fn-flex">查看交易记录</router-link></p>
       <ul class="ui-tab wallet-tab fn-flex">
         <li v-bind:class="classTab('receive')" v-on:click="changeTab('receive')"><a>收钱</a></li>
         <li v-bind:class="classTab('send')" v-on:click="changeTab('send')"><a>转账</a></li>
@@ -38,11 +39,6 @@
         <div class="wallet-send" v-if="showTab == 'send'">
           <WalletSend />
         </div>
-      </div>
-
-      <div class="walletHistory">
-        <div class="column-title">交易记录</div>
-        <TransactionList v-bind:publicKey="publicKey"/>
       </div>
     </div>
 
@@ -58,14 +54,15 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { Toast } from 'mint-ui'
-import TransactionList from './TransactionList.vue'
 import WalletSend from './WalletSend'
 import LeftSide from './LeftSide'
 import sdk from '../libs/sdk'
 import storage from '../libs/storage'
+import { mixin as clickaway } from 'vue-clickaway'
 
 export default {
   name: 'Wallet',
+  mixins: [ clickaway ],
   computed: mapGetters({
     wallet: 'getActiveWallet',
     isOnlineAccount: 'isOnlineAccount',
@@ -74,7 +71,6 @@ export default {
     usdBalance: 'usdBalance'
   }),
   components: {
-    TransactionList,
     LeftSide,
     WalletSend
   },
@@ -111,13 +107,19 @@ export default {
     showPop: function () {
       this.showTools = !this.showTools
     },
+    away: function () {
+      this.showTools = false
+    },
     askForSomeLumens: function () {
+      this.isAsking = true
       sdk.whoIsYourDaddy(this.publicKey)
         .then((res) => {
+          this.isAsking = false
           Toast('好朋友给你赠送了1000个lumens，请查收!')
           this.loadAccound()
         })
         .catch(function () {
+          this.isAsking = false
           Toast('要钱没有，要命一条')
         })
     },
@@ -141,6 +143,7 @@ export default {
       isTest: sdk.isTest(),
       showTools: false,
       showTab: 'receive',
+      isAsking: false,
       classTab: function (name) {
         return {
           active: this.showTab === name
@@ -176,9 +179,6 @@ export default {
 
   .wallet-receive .address{margin-bottom: 1em; white-space:normal; word-break:break-all;}
   .wallet-receive .gray-text{font-size: 0.875em;}
-
-  .walletHistory{margin-top: 3em;}
-  .column-title{margin-bottom: 1em; padding: 0.5em 1em; border-left: 3px solid #2196f3; background-color: #f0f0f0; font-size: 1.125em;}
   .content{box-sizing: border-box; max-width: 60em; margin: 0 auto; padding: 2em; background-color: #fff;}
   .page-popup .mint-popup-3 {
       width: 100%;

@@ -1,13 +1,7 @@
 import store from 'store'
 import * as func from './func'
-var activeWallet = null
 
 export default {
-  setActiveWallet: function (wallet) {
-    activeWallet = wallet
-    store.set('activew', JSON.stringify(activeWallet))
-  },
-
   getActiveWallet: function () {
     var wallets = this.getAllWallets()
     if (!wallets || wallets.length < 1) {

@@ -85,12 +85,12 @@ export default {
       }
 
       var wallet = {
-        publicKey: this.publicKey,
-        secretKey: this.secretKey,
+        publicKey: keyPair.publicKey,
+        secretKey: keyPair.secretKey,
         active: true,
         name: ''
       }
-      this.updateWalletBySecretKey({wallet: wallet, secretKey: this.secretKey, force: true})
+      this.updateWalletBySecretKey({wallet: wallet, secretKey: keyPair.secretKey, force: true})
       this.secretKey = ''
       this.publicKey = ''
       this.$emit('onComplete')
