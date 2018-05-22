@@ -1,20 +1,23 @@
 <template>
-  <div>
-    <h2>钱包账户管理</h2>
-    <ul id="example-1">
-      <li v-for="(wallet, index) in wallets" v-bind:key="index">
-        <p>{{ index }} <input type="radio" name="active_value" v-model="activeIndex" v-bind:value="index"></p>
-        <p><label>钱包名称 :</label> <input v-bind:value="wallet.name" v-on:input="updateOneWalletName($event.target.value, index)"/></p>
-        <p><label>钱包密钥 :</label> <input disabled readonly v-bind:value="wallet.secretKey" /></p>
-        <p><label>地址 :</label> <input disabled readonly v-bind:value="wallet.publicKey" /></p>
-      </li>
-    </ul>
+  <div class="container">
+    <Head />
+    <div class="content">
+      <h2 class="column-title">钱包账户管理</h2>
+      <ul id="example-1">
+        <li v-for="(wallet, index) in wallets" v-bind:key="index">
+          <p>{{ index }} <input type="radio" name="active_value" v-model="activeIndex" v-bind:value="index"></p>
+          <p><label>钱包名称 :</label> <input v-bind:value="wallet.name" v-on:input="updateOneWalletName($event.target.value, index)"/></p>
+          <p><label>钱包密钥 :</label> <input disabled readonly v-bind:value="wallet.secretKey" /></p>
+          <p><label>地址 :</label> <input disabled readonly v-bind:value="wallet.publicKey" /></p>
+        </li>
+      </ul>
 
-    <mt-button type="default" v-on:click="showForm">添加</mt-button>
-    <mt-popup
-      v-model="popupVisible">
-      <AddPanel v-on:onComplete="finishAdd" />
-    </mt-popup>
+      <mt-button type="default" v-on:click="showForm">添加</mt-button>
+      <mt-popup
+        v-model="popupVisible">
+        <AddPanel v-on:onComplete="finishAdd" />
+      </mt-popup>
+    </div>
   </div>
 </template>
 
@@ -22,6 +25,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import storage from '../libs/storage'
 import AddPanel from './AddPanel'
+import Head from './Head'
 
 export default {
   name: 'WalletList',
@@ -39,7 +43,8 @@ export default {
     })
   },
   components: {
-    AddPanel
+    AddPanel,
+    Head
   },
   methods: {
     ...mapActions([
@@ -74,5 +79,11 @@ export default {
 </script>
 
 <style scoped>
+  .content{box-sizing: border-box; max-width: 60em; min-height: 36em; margin: 0 auto; padding: 1.5em 1em; background-color: #fff;}
+  .column-title{margin-bottom: 1em; padding: 0.5em 0; font-size: 1.125em;}
 
+  @media screen and (max-width: 480px) {
+    .content{padding: 1em 0 0; min-height: auto;}
+    .column-title{margin-bottom: 1em; padding: 0.5em 0.625em;}
+  }
 </style>

@@ -1,28 +1,21 @@
 <template>
   <div>
     <mt-loadmore :top-method="loadTop" @top-status-change="handleTopChange">
-      <div v-if="list.length < 1" class="no-data">
-        暂无交易记录
+      <div class="no-data" v-if="isLoading">
+        <i>loading....</i>
       </div>
       <div class="" v-else>
-        <table>
-          <thead>
-          <tr>
-            <th width="10%">时间</th>
-            <th width="10%">收支类型</th>
-            <th width="40%">地址</th>
-            <th width="10%">金额</th>
-            <th>说明</th>
-          </tr>
-          </thead>
-          <tbody v-for="(item, index) in list" :key="index">
-          <TransactionItem v-bind:item="item" v-bind:transaction_id="item._links.transaction.href | cultHref"/>
-          </tbody>
-        </table>
-      </div>
-      <div slot="top" class="mint-loadmore-top">
-        <span v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">↓</span>
-        <span v-show="topStatus === 'loading'">Loading...</span>
+        <div v-if="list.length < 1" class="no-data">
+          暂无交易记录
+        </div>
+        <div class="list" v-else>
+          <div v-for="(item, index) in list" :key="index">
+            <TransactionItem v-bind:item="item" v-bind:transaction_id="item._links.transaction.href | cultHref"/>
+          </div>
+        </div>
+        <div slot="top" class="mint-loadmore-top">
+          <span v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }">↓</span>
+        </div>
       </div>
     </mt-loadmore>
   </div>
@@ -48,9 +41,11 @@ export default {
       .order('desc')
       .call()
       .then(function (ops) {
+        that.isLoading = false
         that.list = ops.records
       })
       .catch(function () {
+        that.isLoading = false
         that.list = []
       })
   },
@@ -71,6 +66,7 @@ export default {
   },
   data () {
     return {
+      isLoading: true,
       list: [],
       topStatus: 'loading'
     }
@@ -81,4 +77,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .no-data{padding: 3em 0; text-align: center; color: #9e9e9e; font-size: 0.875em;}
+  .list{}
+  @media screen and (max-width: 480px) {
+
+  }
 </style>
