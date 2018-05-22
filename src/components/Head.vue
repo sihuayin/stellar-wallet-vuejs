@@ -7,13 +7,7 @@
       </div>
       <div class="navbar-right">
         <div class="navbar-right-select" v-on:click="showPop">管理<i class="iconfont icon-list"></i></div>
-        <div class="tool-slide" v-if="showTools">
-          <div class="tool-arrow"><i class="iconfont icon-arrow"></i></div>
-          <ul class="tool-list" v-on-clickaway="away">
-            <li><router-link to="/wallet_list" class="fn-flex"><span>管理钱包</span><i class="iconfont icon-angle"></i></router-link></li>
-            <li><router-link to="/wallet_list" class="fn-flex"><span>设置</span><i class="iconfont icon-angle"></i></router-link></li>
-          </ul>
-        </div>
+        <DropMenu v-bind:showTools="showTools" v-on:away="away"/>
       </div>
     </div>
   </div>
@@ -21,10 +15,14 @@
 
 <script>
 import { mixin as clickaway } from 'vue-clickaway'
+import DropMenu from './widget/DropMenu'
 
 export default {
   name: 'Head',
   mixins: [ clickaway ],
+  components: {
+    DropMenu
+  },
   methods: {
     showPop: function () {
       this.showTools = !this.showTools

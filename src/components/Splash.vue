@@ -1,28 +1,32 @@
 <template>
   <div id="app">
     <h1>Welcome! {{ testValue }}</h1>
+    <Spinner />
   </div>
 </template>
 
 <script>
-import { Indicator } from 'mint-ui'
+import Spinner from 'vue-simple-spinner'
 import storage from '../libs/storage'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'Splash',
+  components: {
+    Spinner
+  },
   computed: mapGetters({
     testValue: 'getTest',
     wallet: 'getActiveWallet'
   }),
   created: function () {
-    Indicator.open('加载中...')
+    // Indicator.open('加载中...')
     var wallets = storage.getAllWallets()
     this.setWallets(wallets)
 
     var wallet = storage.getActiveWallet()
     setTimeout(() => {
-      Indicator.close()
+      // Indicator.close()
       if (wallet) {
         this.$router.push('/wallet')
       } else {

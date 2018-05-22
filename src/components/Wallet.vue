@@ -1,52 +1,51 @@
 <template>
   <div class="container">
+
     <Head />
+
     <div class="tips" v-if="!isOnlineAccount"><p>您的账户还未被网络记录，你需要发送至少20个lumens (XLM)到这个账户。</p></div>
     <div class="content">
       <ul class="wallet-con">
         <li class="blue-text">{{ wallet && wallet.name || '未命名'}}</li>
         <li class="num">{{ balance }} XLM</li>
         <li class="cost">{{ usdBalance }} USD</li>
-        <li><button v-if="!isAsking" type="button" v-on:click="askForSomeLumens" class="ui-btn">获取测试币</button><mt-spinner :type="3" v-else></mt-spinner></li>
+        <li><button v-if="!isAsking" type="button" v-on:click="askForSomeLumens" class="ui-btn">获取测试币</button><Spinner v-else /></li>
       </ul>
-      <div class="text-right"><router-link to="/history"><button type="button" class="ui-btn ui-btn-white">查看交易记录</button></router-link></div>
-      <ul class="ui-tab wallet-tab fn-flex">
-        <li v-bind:class="classTab('receive')" v-on:click="changeTab('receive')"><a>收钱</a></li>
-        <li v-bind:class="classTab('send')" v-on:click="changeTab('send')"><a>转账</a></li>
-      </ul>
-      <div class="ui-tab-content">
-        <div class="wallet-receive" v-if="showTab == 'receive'">
-          <div class="address">收款地址：{{ publicKey }}</div>
-          <p class="gray-text">注：将收款地址提供给收款方即可</p>
-        </div>
-        <div class="wallet-send" v-if="showTab == 'send'">
-          <WalletSend />
-        </div>
-      </div>
-    </div>
 
-    <mt-popup
-      v-model="walletSend"
-      popup-transition="popup-fade">
-      <WalletSend />
-    </mt-popup>
+          <div class="text-right"><router-link to="/history"><button type="button" class="ui-btn ui-btn-white">查看交易记录</button></router-link></div>
+      <Tab v-bind:titles="[{text: '收钱', key: 'received'}, {text: '转账', key: 'send'}]" defaultKey="received">
+        <div slot="received">
+          <div class="wallet-receive">
+            <div class="address">收款地址：{{ publicKey }}</div>
+            <p class="gray-text">注：将收款地址提供给收款方即可</p>
+          </div>
+
+        </div>
+        <div slot="send">
+          <div class="wallet-send">
+            <WalletSend />
+          </div>
+        </div>
+      </Tab>
+    </div>
 
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { Toast } from 'mint-ui'
 import Head from './Head'
+import Vue from 'vue'
 import WalletSend from './WalletSend'
 import LeftSide from './LeftSide'
 import sdk from '../libs/sdk'
 import storage from '../libs/storage'
-import { mixin as clickaway } from 'vue-clickaway'
+import DropMenu from './widget/DropMenu'
+import Tab from './widget/Tab'
+import Spinner from 'vue-simple-spinner'
 
 export default {
   name: 'Wallet',
-  mixins: [ clickaway ],
   computed: mapGetters({
     wallet: 'getActiveWallet',
     isOnlineAccount: 'isOnlineAccount',
@@ -57,7 +56,10 @@ export default {
   components: {
     Head,
     LeftSide,
-    WalletSend
+    WalletSend,
+    DropMenu,
+    Tab,
+    Spinner
   },
   created: function () {
     var that = this
@@ -94,12 +96,12 @@ export default {
       sdk.whoIsYourDaddy(this.publicKey)
         .then((res) => {
           this.isAsking = false
-          Toast('好朋友给你赠送了1000个lumens，请查收!')
+          Vue.toast('好朋友给你赠送了1000个lumens，请查收!')
           this.loadAccound()
         })
         .catch(function () {
           this.isAsking = false
-          Toast('要钱没有，要命一条')
+          Vue.toast('要钱没有，要命一条')
         })
     },
 
