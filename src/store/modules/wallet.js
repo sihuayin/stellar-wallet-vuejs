@@ -1,6 +1,6 @@
 import sdk from '../../libs/sdk'
 import * as func from '../../libs/func'
-import { Toast } from 'mint-ui'
+import Vue from 'vue'
 import request from 'superagent'
 import storage from '../../libs/storage'
 import StellarSdk from 'stellar-sdk'
@@ -64,11 +64,11 @@ const actions = {
     }).catch(function (err) {
       if (err.name === 'NotFoundError') {
         // success = true
-        Toast('没有入链条的key: ' + wallet.publicKey)
+        Vue.toast('没有入链条的key: ' + wallet.publicKey)
         commit('setOnline', false)
         return false
       }
-      Toast('没有入链条的key: ' + err.detail)
+      Vue.toast('没有入链条的key: ' + err.detail)
     }).finally(function () {
       // if (success) {
       //   that.$router.push('/wallet')
@@ -236,10 +236,10 @@ const actions = {
         return server.submitTransaction(transaction)
       })
       .then(() => {
-        Toast('转账成功')
+        Vue.toast('转账成功')
       })
       .catch(() => {
-        Toast('创建账户失败')
+        Vue.toast('创建账户失败')
       })
   }
 }

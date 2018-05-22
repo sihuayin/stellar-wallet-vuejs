@@ -34,7 +34,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import { Toast } from 'mint-ui'
+import Vue from 'vue'
 
 export default {
   name: 'WalletSend',
@@ -55,13 +55,13 @@ export default {
     send: function () {
       // 检测输入金额
       if (!this.amount || this.amount < 0 || isNaN(this.amount) || isNaN(parseFloat(this.amount))) {
-        Toast('请输入数字')
+        Vue.toast('请输入数字')
         return false
       }
 
       // 检测地址的输入
       if (!this.receiver) {
-        Toast('请输入收钱人的地址')
+        Vue.toast('请输入收钱人的地址')
         return false
       }
 

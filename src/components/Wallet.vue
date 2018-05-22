@@ -8,13 +8,7 @@
         </div>
         <div class="navbar-right">
           <div class="navbar-right-select" v-on:click="showPop">管理<i class="iconfont icon-list"></i></div>
-          <div class="tool-slide" v-if="showTools">
-            <div class="tool-arrow"><i class="iconfont icon-arrow"></i></div>
-            <ul class="tool-list" v-on-clickaway="away">
-              <li><router-link to="/wallet_list" class="fn-flex"><span>管理钱包</span><i class="iconfont icon-angle"></i></router-link></li>
-              <li><router-link to="/wallet_list" class="fn-flex"><span>设置</span><i class="iconfont icon-angle"></i></router-link></li>
-            </ul>
-          </div>
+          <DropMenu v-bind:showTools="showTools" v-on:away="away"/>
         </div>
       </div>
     </div>
@@ -24,45 +18,40 @@
         <li class="blue-text">{{ wallet && wallet.name || '未命名'}}</li>
         <li class="num">{{ balance }} XLM</li>
         <li class="cost">{{ usdBalance }} USD</li>
-        <li><button v-if="!isAsking" type="button" v-on:click="askForSomeLumens" class="ui-btn">获取测试币</button><mt-spinner :type="3" v-else></mt-spinner></li>
+        <li><button v-if="!isAsking" type="button" v-on:click="askForSomeLumens" class="ui-btn">获取测试币</button><Spinner v-else /></li>
       </ul>
       <p><router-link to="/history" class="fn-flex">查看交易记录</router-link></p>
-      <ul class="ui-tab wallet-tab fn-flex">
-        <li v-bind:class="classTab('receive')" v-on:click="changeTab('receive')"><a>收钱</a></li>
-        <li v-bind:class="classTab('send')" v-on:click="changeTab('send')"><a>转账</a></li>
-      </ul>
-      <div class="ui-tab-content">
-        <div class="wallet-receive" v-if="showTab == 'receive'">
-          <div class="address">收款地址：{{ publicKey }}</div>
-          <p class="gray-text">注：将收款地址提供给收款方即可</p>
+      <Tab v-bind:titles="[{text: '收钱', key: 'received'}, {text: '转账', key: 'send'}]" defaultKey="received">
+        <div slot="received">
+          <div class="wallet-receive">
+            <div class="address">收款地址：{{ publicKey }}</div>
+            <p class="gray-text">注：将收款地址提供给收款方即可</p>
+          </div>
         </div>
-        <div class="wallet-send" v-if="showTab == 'send'">
-          <WalletSend />
+        <div slot="send">
+          <div class="wallet-send">
+            <WalletSend />
+          </div>
         </div>
-      </div>
+      </Tab>
     </div>
-
-    <mt-popup
-      v-model="walletSend"
-      popup-transition="popup-fade">
-      <WalletSend />
-    </mt-popup>
 
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { Toast } from 'mint-ui'
+import Vue from 'vue'
 import WalletSend from './WalletSend'
 import LeftSide from './LeftSide'
 import sdk from '../libs/sdk'
 import storage from '../libs/storage'
-import { mixin as clickaway } from 'vue-clickaway'
+import DropMenu from './widget/DropMenu'
+import Tab from './widget/Tab'
+import Spinner from 'vue-simple-spinner'
 
 export default {
   name: 'Wallet',
-  mixins: [ clickaway ],
   computed: mapGetters({
     wallet: 'getActiveWallet',
     isOnlineAccount: 'isOnlineAccount',
@@ -72,7 +61,10 @@ export default {
   }),
   components: {
     LeftSide,
-    WalletSend
+    WalletSend,
+    DropMenu,
+    Tab,
+    Spinner
   },
   created: function () {
     var that = this
@@ -115,12 +107,12 @@ export default {
       sdk.whoIsYourDaddy(this.publicKey)
         .then((res) => {
           this.isAsking = false
-          Toast('好朋友给你赠送了1000个lumens，请查收!')
+          Vue.toast('好朋友给你赠送了1000个lumens，请查收!')
           this.loadAccound()
         })
         .catch(function () {
           this.isAsking = false
-          Toast('要钱没有，要命一条')
+          Vue.toast('要钱没有，要命一条')
         })
     },
 
@@ -162,12 +154,6 @@ export default {
   h1{margin-left: 0.35em; font-size: 1.25em;}
   .navbar-right{position: relative; z-index: 1;}
   .navbar-right-select i{margin-left: 0.35em; color: #999;}
-  .tool-slide{position: absolute; z-index: 10; right: -0.625em;}
-  .tool-list{width: 8em; background-color: #fff; box-shadow: 0 0 5px rgba(0,0,0,.2), 0 0 5px rgba(0,0,0,.2);}
-  .tool-arrow{position: absolute; right: 0.5em; top: -0.2em; z-index: 9; color: #fff; text-shadow: rgba(0,0,0,.25) 0 -0.07em 0.1em;font-size: 1.25em; line-height: 0;}
-  .tool-list li{border-top: 1px solid #f0f0f0; font-size: 0.875em; line-height: 150%;}
-  .tool-list li .fn-flex{justify-content: space-between; padding: 0.875em 0.625em;}
-  .tool-list li i{font-size: 0.625em; color: #9e9e9e;}
 
   .tips{box-sizing: border-box; max-width: 60em; margin: 0 auto; padding: 0.75em;}
   .tips p{font-size: 0.875em;}

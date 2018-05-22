@@ -4,15 +4,14 @@ import Unlock from '@/components/Unlock'
 import Wallet from '@/components/Wallet'
 import Splash from '@/components/Splash'
 import Setup from '@/components/Setup'
+import Asset from '@/components/Asset'
 import TransactionHistory from '@/components/TransactionHistory'
 import WalletList from '@/components/WalletList'
-import { install as Mint } from 'mint-ui/lib/index'
+
 import storage from '../libs/storage'
-import 'mint-ui/lib/style.css'
 import sdk from '../libs/sdk'
 
 Vue.use(Router)
-Vue.use(Mint)
 sdk.init()
 
 function requireAuth (route, redirect, next) {
@@ -58,6 +57,12 @@ const router = new Router({
       path: '/history',
       name: 'History',
       component: TransactionHistory,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/asset',
+      name: 'Asset',
+      component: Asset,
       beforeEnter: requireAuth
     }
   ]

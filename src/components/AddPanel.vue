@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import {Toast} from 'mint-ui'
+import Vue from 'vue'
 import { mapActions } from 'vuex'
 var StellarSdk = require('stellar-sdk')
 
@@ -73,14 +73,14 @@ export default {
     ]),
     unlockWithSecretKey: function () {
       if (!this.secretKey) {
-        Toast('输入的私钥')
+        Vue.toast('输入的私钥')
         return false
       }
 
       var keyPair = getKeypairFromSecretKey(StellarSdk, this.secretKey)
 
       if (!keyPair) {
-        Toast('输入的私钥错误')
+        Vue.toast('输入的私钥错误')
         return false
       }
 
