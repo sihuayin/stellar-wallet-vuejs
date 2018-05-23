@@ -4,7 +4,7 @@
     <li v-for="(title, index) in titles" :key="index" v-bind:class="isActive(title.key)" v-on:click="changeTab(title.key)"><a>{{ title.text }}</a></li>
   </ul>
   <div class="ui-tab-content">
-    <slot name="find">sss</slot>
+    <slot v-bind:name="tabKey">sss</slot>
   </div>
 </div>
 </template>
