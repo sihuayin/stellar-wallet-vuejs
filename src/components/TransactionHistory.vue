@@ -1,7 +1,8 @@
 <template>
-  <div>
-    <div class="walletHistory">
-      <div class="column-title">交易记录</div>
+  <div class="container">
+    <Head />
+    <div class="content">
+      <h2 class="column-title">交易记录</h2>
       <TransactionList v-bind:publicKey="publicKey"/>
     </div>
   </div>
@@ -9,11 +10,13 @@
 
 <script>
 import storage from '../libs/storage'
+import Head from './Head'
 import TransactionList from './TransactionList.vue'
 
 export default {
   name: 'TransactionHistory',
   components: {
+    Head,
     TransactionList
   },
   created: function () {
@@ -32,6 +35,11 @@ export default {
 </script>
 
 <style scoped>
-.walletHistory{margin-top: 3em;}
-.column-title{margin-bottom: 1em; padding: 0.5em 1em; border-left: 3px solid #2196f3; background-color: #f0f0f0; font-size: 1.125em;}
+  .content{box-sizing: border-box; max-width: 60em; min-height: 36em; margin: 0 auto; padding: 1.5em 1em; background-color: #fff;}
+  .column-title{margin-bottom: 1em; padding: 0.5em 0; font-size: 1.125em;}
+
+  @media screen and (max-width: 480px) {
+    .content{padding: 1em 0 0; min-height: auto;}
+    .column-title{margin-bottom: 1em; padding: 0.5em 0.625em;}
+  }
 </style>

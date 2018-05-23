@@ -1,7 +1,7 @@
 <template>
 <div>
-  <ul class="ui-tab wallet-tab fn-flex">
-    <li v-for="(title, index) in titles" :key="index" v-bind:class="isActive(title.key)" v-on:click="changeTab(title.key)"><a>{{ title.text }} {{title}}</a></li>
+  <ul class="ui-tab fn-flex">
+    <li v-for="(title, index) in titles" :key="index" v-bind:class="isActive(title.key)" v-on:click="changeTab(title.key)"><a>{{ title.text }}</a></li>
   </ul>
   <div class="ui-tab-content">
     <slot name="find">sss</slot>

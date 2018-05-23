@@ -1,11 +1,14 @@
 <template>
-  <tr>
-    <td>{{ date }}</td>
-    <td>{{ action }}</td>
-    <td class="fn-break"><a href="#">{{ key }}</a></td>
-    <td>{{ amount | formatLumens }} [{{ asset }}]</td>
-    <td>{{ memo }}：{{ memo_type }}</td>
-  </tr>
+  <div class="listItem">
+    <div class="listItem-date">{{ date }}</div>
+    <div class="listItem-del fn-flex">
+      <div class="left">
+        <span class="fn-break">{{ key }}</span>
+        <span class="text-gray">{{ memo }}：{{ memo_type }}</span>
+      </div>
+      <div class="right fn-break">{{ action === 'send' ? '-' : '+' }} {{ amount | formatLumens }} {{ asset }}</div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -97,4 +100,15 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .fn-break{white-space:normal; word-break:break-all;}
+  .listItem{font-size: 0.875em;}
+  .listItem-date{padding: 0.5em 1em; background-color: #f5f5f5; font-size: 0.875em;}
+  .listItem-del{justify-content: space-between; padding: 0.5em 1em; border-bottom: 1px solid #e5e5e5;}
+  .listItem-del .left{flex: 2;}
+  .listItem-del .left span{display: block;}
+  .listItem-del .right{flex: 1; padding-left: 1em; text-align: right;}
+  .listItem-del .left .text-gray{font-size: 0.75em; color: #9e9e9e;}
+  @media screen and (max-width: 480px) {
+    .listItem-date{padding: 0.5em 0.625em;}
+    .listItem-del{padding: 0.5em 0.625em;}
+  }
 </style>
