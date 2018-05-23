@@ -13,20 +13,20 @@
       </ul>
 
       <div class="text-right"><router-link to="/history"><button type="button" class="ui-btn ui-btn-white">查看交易记录</button></router-link></div>
-      <Tab v-bind:titles="[{text: '收钱', key: 'received'}, {text: '转账', key: 'send'}]" defaultKey="received" class="wallet-tab">
-        <div slot="received">
+      <Tabs class="wallet-tab">
+        <Tab index="0" title="收钱">
           <div class="wallet-receive">
             <div class="address">收款地址：{{ publicKey }}</div>
             <p class="gray-text">注：将收款地址提供给收款方即可</p>
           </div>
-        </div>
+        </Tab>
 
-        <div slot="send">
+        <Tab index="1" title="转账">
           <div class="wallet-send">
             <WalletSend />
           </div>
-        </div>
-      </Tab>
+        </Tab>
+      </Tabs>
     </div>
 
   </div>
@@ -41,6 +41,7 @@ import LeftSide from './LeftSide'
 import sdk from '../libs/sdk'
 import DropMenu from './widget/DropMenu'
 import Tab from './widget/Tab'
+import Tabs from './widget/Tabs'
 import Spinner from 'vue-simple-spinner'
 
 export default {
@@ -58,6 +59,7 @@ export default {
     WalletSend,
     DropMenu,
     Tab,
+    Tabs,
     Spinner
   },
   created: function () {
