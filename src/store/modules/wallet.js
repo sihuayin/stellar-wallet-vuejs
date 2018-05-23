@@ -6,9 +6,13 @@ import storage from '../../libs/storage'
 import StellarSdk from 'stellar-sdk'
 // initial state
 // shape: [{ id, quantity }]
+var wallets = storage.getAllWallets()
+
+var wallet = storage.getActiveWallet()
+
 const state = {
-  wallets: [],
-  activeWallet: {},
+  wallets: wallets || [],
+  activeWallet: wallet || {},
   testValue: 1,
   isOnlineAccount: false,
   balance: 0,
@@ -143,7 +147,10 @@ const actions = {
       wallets.push(data.wallet)
       storage.setWallets(JSON.parse(JSON.stringify(wallets)))
     } else {
-      wallets[index].active = true
+      if (data.force) {
+        data.wallet.active = true
+      }
+      wallets[index] = data.wallet
       commit('setWallets', wallets)
       storage.setWallets(wallets)
     }

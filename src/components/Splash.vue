@@ -1,14 +1,13 @@
 <template>
   <div id="app">
-    <h1>Welcome! {{ testValue }}</h1>
+    <h1>Welcome!</h1>
     <Spinner />
   </div>
 </template>
 
 <script>
 import Spinner from 'vue-simple-spinner'
-import storage from '../libs/storage'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Splash',
@@ -16,28 +15,18 @@ export default {
     Spinner
   },
   computed: mapGetters({
-    testValue: 'getTest',
     wallet: 'getActiveWallet'
   }),
   created: function () {
-    // Indicator.open('加载中...')
-    var wallets = storage.getAllWallets()
-    this.setWallets(wallets)
-
-    var wallet = storage.getActiveWallet()
     setTimeout(() => {
       // Indicator.close()
-      if (wallet) {
+      if (this.wallet) {
         this.$router.push('/wallet')
       } else {
         this.$router.push('/unlock')
       }
     }, 2000)
-  },
-  methods: mapActions([
-    'test',
-    'setWallets'
-  ])
+  }
 }
 </script>
 

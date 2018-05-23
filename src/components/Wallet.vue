@@ -45,7 +45,6 @@ import Vue from 'vue'
 import WalletSend from './WalletSend'
 import LeftSide from './LeftSide'
 import sdk from '../libs/sdk'
-import storage from '../libs/storage'
 import DropMenu from './widget/DropMenu'
 import Tab from './widget/Tab'
 import Spinner from 'vue-simple-spinner'
@@ -67,28 +66,24 @@ export default {
     Spinner
   },
   created: function () {
-    var that = this
-    var wallets = storage.getAllWallets()
-    this.setWallets(wallets)
-
-    var wallet = storage.getActiveWallet()
-    if (!wallet) {
+    if (!this.wallet) {
       return this.$router.go(-1)
     }
-    this.publicKey = wallet.publicKey
+    this.publicKey = this.wallet.publicKey
     this.loadAccound()
 
     // 监听变更
-    var server = sdk.getServer()
-    server.payments()
-      .cursor('now')
-      .forAccount(wallet.publicKey)
-      .stream({
-        onmessage: function (message) {
-          console.log(message)
-          that.loadAccound()
-        }
-      })
+    // var server = sdk.getServer()
+    // var that = this
+    // server.payments()
+    //   .cursor('now')
+    //   .forAccount(wallet.publicKey)
+    //   .stream({
+    //     onmessage: function (message) {
+    //       console.log(message)
+    //       that.loadAccound()
+    //     }
+    //   })
   },
   methods: {
     ...mapActions([
