@@ -12,15 +12,15 @@
         <li><button v-if="!isAsking" type="button" v-on:click="askForSomeLumens" class="ui-btn">获取测试币</button><Spinner v-else /></li>
       </ul>
 
-          <div class="text-right"><router-link to="/history"><button type="button" class="ui-btn ui-btn-white">查看交易记录</button></router-link></div>
-      <Tab v-bind:titles="[{text: '收钱', key: 'received'}, {text: '转账', key: 'send'}]" defaultKey="received">
+      <div class="text-right"><router-link to="/history"><button type="button" class="ui-btn ui-btn-white">查看交易记录</button></router-link></div>
+      <Tab v-bind:titles="[{text: '收钱', key: 'received'}, {text: '转账', key: 'send'}]" defaultKey="received" class="wallet-tab">
         <div slot="received">
           <div class="wallet-receive">
             <div class="address">收款地址：{{ publicKey }}</div>
             <p class="gray-text">注：将收款地址提供给收款方即可</p>
           </div>
-
         </div>
+
         <div slot="send">
           <div class="wallet-send">
             <WalletSend />
@@ -143,6 +143,7 @@ export default {
   .wallet-con li{padding-bottom: 0.5em;}
   .wallet-con .num{font-size: 2em; line-height: 120%;}
   .wallet-con .cost{font-size: 1.25em; color: #9e9e9e;}
+  .wallet-tab{margin-top: 2em;}
 
   .wallet-receive .address{margin-bottom: 1em; white-space:normal; word-break:break-all;}
   .wallet-receive .gray-text{font-size: 0.875em;}

@@ -1,10 +1,12 @@
 <template>
   <div class="head">
     <div class="navbar fn-flex">
-      <div class="navbar-left fn-flex">
-        <i class="iconfont icon-wallet logo"></i>
-        <h1>钱包WALLET</h1>
-      </div>
+      <router-link to="/wallet">
+        <div class="navbar-left fn-flex">
+          <i class="iconfont icon-wallet logo"></i>
+          <h1>钱包WALLET</h1>
+        </div>
+      </router-link>
       <div class="navbar-right">
         <div class="navbar-right-select" v-on:click="showPop">管理<i class="iconfont icon-list"></i></div>
         <DropMenu v-bind:showTools="showTools" v-on:away="away"/>

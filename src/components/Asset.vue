@@ -1,23 +1,28 @@
 <template>
-  <div>
-    <tab v-bind:titles="[{text: '资产列表', key: 'list'}, {text: '查询资产', key: 'find'}, {text: '添加资产', key: 'add'}]" defaultKey="list">
-      <div slot="list">1</div>
-      <div slot="find">
-        <p>查询</p>
-        <p><label>域名</label><input type="text" v-model="searchDomain"/></p>
-        <p><button v-on:click="searchAsset">搜索</button></p>
-        <hr />
-        <div><label>资产名称</label><label>icon</label><label>资产编码</label><label>资产信息</label></div>
-        <div v-for="(item,index) in searchResults" :key="index">
-          <span>{{ item.name }}</span>
-          <span>{{ item.image }}</span>
-          <span>{{ item.code }}</span>
-          <span><button v-on:click="showInfo(item)">详细信息</button></span>
-          <span><button v-on:click="saveAsset(item)">保存资产</button></span>
+  <div class="container">
+    <Head />
+    <div class="content">
+      <h2 class="column-title">资产</h2>
+
+      <tab v-bind:titles="[{text: '资产列表', key: 'list'}, {text: '查询资产', key: 'find'}, {text: '添加资产', key: 'add'}]" defaultKey="list">
+        <div slot="list">1</div>
+        <div slot="find">
+          <p>查询</p>
+          <p><label>域名</label><input type="text" v-model="searchDomain"/></p>
+          <p><button v-on:click="searchAsset">搜索</button></p>
+          <hr />
+          <div><label>资产名称</label><label>icon</label><label>资产编码</label><label>资产信息</label></div>
+          <div v-for="(item,index) in searchResults" :key="index">
+            <span>{{ item.name }}</span>
+            <span>{{ item.image }}</span>
+            <span>{{ item.code }}</span>
+            <span><button v-on:click="showInfo(item)">详细信息</button></span>
+            <span><button v-on:click="saveAsset(item)">保存资产</button></span>
+          </div>
         </div>
-      </div>
-      <div slot="add">3</div>
-    </tab>
+        <div slot="add">3</div>
+      </tab>
+    </div>
 
     <modals-container/>
 
@@ -25,6 +30,7 @@
 </template>
 
 <script>
+import Head from './Head'
 import Tab from './widget/Tab'
 import StellarSdk from 'stellar-sdk'
 import Vue from 'vue'
@@ -33,6 +39,7 @@ import sdk from '../libs/sdk'
 export default {
   name: 'Asset',
   components: {
+    Head,
     Tab
   },
   data: function () {
@@ -106,5 +113,11 @@ export default {
 </script>
 
 <style scoped>
+  .content{box-sizing: border-box; max-width: 60em; min-height: 36em; margin: 0 auto; padding: 1.5em 1em; background-color: #fff;}
+  .column-title{margin-bottom: 1em; padding: 0.5em 0; font-size: 1.125em;}
 
+  @media screen and (max-width: 480px) {
+    .content{padding: 1em 0 0; min-height: auto;}
+    .column-title{margin-bottom: 1em; padding: 0.5em 0.625em;}
+  }
 </style>
