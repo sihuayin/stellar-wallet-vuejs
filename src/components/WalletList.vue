@@ -81,7 +81,6 @@ export default {
 </script>
 
 <style scoped>
-  .fn-break{white-space:normal; word-break:break-all;}
   .column-top{margin-bottom: 1em; padding: 0.5em 0; justify-content: space-between;}
   .column-top button .iconfont{font-weight: bold;}
   .content{box-sizing: border-box; max-width: 60em; min-height: 36em; margin: 0 auto; padding: 1.5em 1em; background-color: #fff;}

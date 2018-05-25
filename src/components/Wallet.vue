@@ -14,14 +14,14 @@
 
       <div class="text-right"><router-link to="/history"><button type="button" class="ui-btn ui-btn-white">查看交易记录</button></router-link></div>
       <Tabs class="wallet-tab">
-        <Tab index="0" title="收钱">
+        <Tab index="0" title="收钱" class="wallet-tab-content">
           <div class="wallet-receive">
             <div class="address">收款地址：{{ publicKey }}</div>
             <p class="gray-text">注：将收款地址提供给收款方即可</p>
           </div>
         </Tab>
 
-        <Tab index="1" title="转账">
+        <Tab index="1" title="转账" class="wallet-tab-content">
           <div class="wallet-send">
             <WalletSend />
           </div>
@@ -141,6 +141,7 @@ export default {
   .wallet-con .num{font-size: 2em; line-height: 120%;}
   .wallet-con .cost{font-size: 1.25em; color: #9e9e9e;}
   .wallet-tab{margin-top: 2em;}
+  .wallet-tab-content{padding: 2em 0.625em;}
 
   .wallet-receive .address{margin-bottom: 1em; white-space:normal; word-break:break-all;}
   .wallet-receive .gray-text{font-size: 0.875em;}

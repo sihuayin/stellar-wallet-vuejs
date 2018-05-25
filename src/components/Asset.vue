@@ -4,26 +4,31 @@
     <div class="content">
       <h2 class="column-title">资产</h2>
       <Tabs>
-        <Tab title="资产列表" index="0">
-          <div><label>发行方</label><label>代码</label><label>余额</label><label>资产信息</label></div>
-          <div v-for="(item,index) in assets" :key="index">
-            <div v-if="item.asset_type === 'native'">
-              <span>Lumen</span>
-              <span><img style="width:32px; height:32px;" src="https://blackwallet.co/assets/img/lumen.png"/> XLM</span>
-              <span> </span>
-              <span>{{ balance }}</span>
+        <Tab title="资产列表" index="0" class="assets-tab-con">
+          <div v-for="(item,index) in assets" :key="index" class="assets-list">
+            <div v-if="item.asset_type === 'native'" class="fn-flex assets-list-item">
+              <div class="left"><img src="../assets/images/bit.jpg"/></div>
+              <div class="middle">
+                <p class="code"><span>代码：</span>Lumen</p>
+                <p><span>余额：</span>{{ balance }} XLM</p>
+              </div>
+              <div class="right"></div>
             </div>
-            <div v-else>
-              <span>{{ item.asset_issuer }}</span>
-              <span>{{ item.asset_code }}</span>
-              <span>{{ item.balance }}</span>
-              <span><button v-on:click="showInfo(item)">查看详情</button></span>
-              <span><button v-on:click="addForAsset(item)">要资产(测试)</button></span>
+            <div v-else class="fn-flex assets-list-item">
+              <div class="left"><img src="../assets/images/bit.jpg"/></div>
+              <div class="middle">
+                <p class="code"><span>代码：</span>{{ item.asset_issuer }}</p>
+                <p><span>余额：</span>{{ item.balance }} {{ item.asset_code }}</p>
+              </div>
+              <div class="right">
+                <button type="button" class="ui-btn ui-btn-white ui-btn-s" v-on:click="showInfo(item)">详情</button>
+                <button type="button" class="ui-btn ui-btn-s" v-on:click="addForAsset(item)">要资产</button>
+              </div>
             </div>
           </div>
         </Tab>
 
-        <Tab title="查询资产" index="1">
+        <Tab title="查询资产" index="1" class="assets-tab-con">
           <p>查询</p>
           <p><label>域名</label><input type="text" v-model="searchDomain"/></p>
           <p><button v-on:click="searchAsset">搜索</button></p>
@@ -38,7 +43,7 @@
           </div>
         </Tab>
 
-        <Tab index="2" title="添加资产">
+        <Tab index="2" title="添加资产" class="assets-tab-con">
           <div>
             <label>资产编码</label> <input type="text" v-model="code" /><br />
             <label>资产发行账号</label> <input type="text" v-model="issuer" /> <br />
@@ -208,9 +213,22 @@ export default {
 <style scoped>
   .content{box-sizing: border-box; max-width: 60em; min-height: 36em; margin: 0 auto; padding: 1.5em 1em; background-color: #fff;}
   .column-title{margin-bottom: 1em; padding: 0.5em 0; font-size: 1.125em;}
+  .assets-list-item{padding: 1em 0; border-bottom: 1px solid #e5e5e5;}
+  .assets-list-item .left{width: 10%; text-align: center;}
+  .assets-list-item .left img{width: 70%; max-width: 2.5em;}
+  .assets-list-item .middle{width: 70%; box-sizing: border-box; padding: 0 0.5em; font-size: 0.875em;}
+  .assets-list-item .middle p{line-height: 180%;}
+  .assets-list-item .middle .code{width: 100%; overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;}
+  .assets-list-item .middle span{color: #666;}
+  .assets-list-item .right{width: 20%; text-align: center;}
+  .assets-list-item .right button{padding-left: 0; padding-right: 0; margin: 0.3em; width: 5.6em;}
 
   @media screen and (max-width: 480px) {
     .content{padding: 1em 0 0; min-height: auto;}
-    .column-title{margin-bottom: 1em; padding: 0.5em 0.625em;}
+    .column-title{margin-bottom: 0.5em; padding: 0.5em 0.625em;}
+    .assets-list-item{padding: 0.75em 0;}
+    .assets-list-item .right .ui-btn-s{padding-top: 0.35em; padding-bottom: 0.35em; width: 5em;}
   }
 </style>

@@ -99,7 +99,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .fn-break{white-space:normal; word-break:break-all;}
   .listItem{font-size: 0.875em;}
   .listItem-date{padding: 0.5em 1em; background-color: #f5f5f5; font-size: 0.875em;}
   .listItem-del{justify-content: space-between; padding: 0.5em 1em; border-bottom: 1px solid #e5e5e5;}
