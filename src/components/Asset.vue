@@ -178,14 +178,20 @@ export default {
     showInfo: function (item) {
       this.$modal.show({
         template: `
-          <div>
-            <h1>This is created inline</h1>
-            <p>资产名称： {{ item.name }}</p>
-            <p>资产图片： <img :src="item.image" /></p>
-            <p>资产发行账号： {{ item.issuer }}</p>
-            <p>资产描述: {{ item.desc }}</p>
-            <p>资产条件: {{ item.conditions }}</p>
-            <button @click="$emit('close')">Close</button>
+          <div class="modal">
+            <div class="modal-top fn-flex">
+              <h2 class="modal-title">资产详情</h2>
+              <div @click="$emit('close')" class="modal-close"><i class="iconfont icon-X"></i></div>
+            </div>
+            <div class="modal-del">
+              <!--item.image-->
+              <div class="modal-del-title fn-flex"><img src="/static/img/bit.de429d5.jpg" /><span>{{ item.name }}</span></div>
+              <ul class="modal-del-list">
+                <li class="fn-break"><span>资产发行账号：</span>{{ item.issuer }}</li>
+                <li><span>资产描述：</span>{{ item.desc }}</li>
+                <li><span>资产条件：</span>{{ item.conditions }}</li>
+              </ul>
+            </div>
           </div>
         `,
         props: ['item']
