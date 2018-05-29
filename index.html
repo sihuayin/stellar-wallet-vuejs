@@ -41,11 +41,29 @@
         background-color: #2196f3;
         color: #fff;
       }
+      .ui-btn:focus, .ui-btn:active{border: 1px solid #2196f3;}
+      .ui-btn:active{opacity: 0.8;}
       .ui-btn-white{color: #222; background-color: #fafafa; border: 1px solid #2196f3;}
       .ui-btn-s{padding: 0.5em 1.25em; font-size: 0.75em;}
+      .ui-btn-disabled{opacity: 0.6;}
       input,
       input:focus{outline: none; border: none;}
       a, a:visited{text-decoration: none; color: #222;}
+
+      .icon-loading1{font-size: 1.7em; opacity: 0.5;}
+      .icon-pulse{
+        display: inline-block;
+        -webkit-animation: icon-pulse 2s infinite linear;
+        animation: icon-pulse 3s infinite linear;
+      }
+      @-webkit-keyframes icon-pulse {
+        0% {-webkit-transform: rotate(0deg); transform: rotate(0deg);}
+        100% {-webkit-transform: rotate(359deg); transform: rotate(359deg);}
+      }
+      @keyframes icon-pulse {
+        0% {-webkit-transform: rotate(0deg); transform: rotate(0deg);}
+        100% {-webkit-transform: rotate(359deg); transform: rotate(359deg);}
+      }
 
       .ui-tab{background-color: #f5f5f5;}
       .ui-tab li{flex: 1;}

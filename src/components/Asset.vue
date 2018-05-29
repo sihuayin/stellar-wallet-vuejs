@@ -29,27 +29,50 @@
         </Tab>
 
         <Tab title="查询资产" index="1" class="assets-tab-con">
-          <p>查询</p>
-          <p><label>域名</label><input type="text" v-model="searchDomain"/></p>
-          <p><button v-on:click="searchAsset">搜索</button></p>
-          <hr />
-          <div><label>资产名称</label><label>icon</label><label>资产编码</label><label>资产信息</label></div>
-          <div v-for="(item,index) in searchResults" :key="index">
-            <span>{{ item.name }}</span>
-            <span>{{ item.image }}</span>
-            <span>{{ item.code }}</span>
-            <span><button v-on:click="showInfo(item)">详细信息</button></span>
-            <span><button v-on:click="saveAsset(item)">保存资产</button></span>
+          <div class="assets-search">
+            <input type="text" placeholder="输入域名查询资产" v-model="searchDomain" />
+            <button type="button" class="ui-btn ui-btn-s" v-on:click="searchAsset" v-if="!isSearch"><i class="iconfont icon-sousuo"></i> 搜索</button>
+            <button type="button" class="ui-btn ui-btn-s ui-btn-disabled" v-else><i class="iconfont icon-sousuo"></i> 搜索</button>
+          </div>
+
+          <div class="assets-search-result">
+            <div class="result-title">查询结果：</div>
+            <div v-for="(item,index) in searchResults" :key="index" class="assets-list" v-if="searchResults.length > 0">
+              <div class="fn-flex assets-list-item">
+                <div class="left"><img src="../assets/images/bit.jpg" /></div>
+                <div class="middle">
+                  <p><span>名称：</span>{{ item.name }}</p>
+                  <p class="code"><span>代码：</span>{{ item.code }}</p>
+                </div>
+                <div class="right">
+                  <button type="button" class="ui-btn ui-btn-white ui-btn-s" v-on:click="showInfo(item)">详情</button>
+                  <button type="button" class="ui-btn ui-btn-s" v-on:click="saveAsset(item)">保存</button>
+                </div>
+              </div>
+            </div>
+            <div class="no-data" v-else>没有找到任何资产信息</div>
           </div>
         </Tab>
 
         <Tab index="2" title="添加资产" class="assets-tab-con">
-          <div>
-            <label>资产编码</label> <input type="text" v-model="code" /><br />
-            <label>资产发行账号</label> <input type="text" v-model="issuer" /> <br />
-            <label>额度</label><input type="text" v-model="limit"/>
-            <p>解释一番</p>
-            <button v-on:click="doChange">确定</button>
+          <div class="assets-add">
+            <div class="form-input fn-flex">
+              <span>资产编码</span>
+              <input type="text" v-model="code" />
+            </div>
+            <div class="form-input fn-flex">
+              <span>资产发行账号</span>
+              <input type="text" v-model="issuer" />
+            </div>
+            <div class="form-input fn-flex">
+              <span>额度</span>
+              <input type="text" v-model="limit" />
+            </div>
+            <div class="form-input fn-flex">
+              <span>说明</span>
+              <textarea type="text" rows="5" v-model="limit" />
+            </div>
+            <div class="assets-add-action"><button class="ui-btn" v-on:click="doChange">添加</button></div>
           </div>
         </Tab>
       </Tabs>
@@ -89,7 +112,8 @@ export default {
       balance: 0,
       issuer: '',
       code: '',
-      limit: 0
+      limit: 0,
+      isSearch: false
     }
   },
   created: function () {
@@ -204,12 +228,16 @@ export default {
       })
     },
     searchAsset: function () {
+      this.searchAsset = true
       StellarSdk.StellarTomlResolver.resolve(this.searchDomain)
         .then((res) => {
           this.searchResults = res.CURRENCIES
+          this.isSearch = false
         })
         .catch(() => {
           Vue.toast('没有找到任何资产信息')
+          this.searchResults = []
+          this.isSearch = false
         })
     }
   }
@@ -230,6 +258,21 @@ export default {
   .assets-list-item .middle span{color: #666;}
   .assets-list-item .right{width: 20%; text-align: center;}
   .assets-list-item .right button{padding-left: 0; padding-right: 0; margin: 0.3em; width: 5.6em;}
+
+  .assets-search{padding: 2em 0; text-align: center;}
+  .assets-search input{max-width: 30em; width: 60%; padding: 0.6em 1em; border: 1px solid #e5e5e5; border-radius: 5px; font-size: 0.875em;}
+  .assets-search .ui-btn-s{font-size: 0.875em;}
+  .assets-search-result .result-title{padding: 0.35em 0.625em; background-color: #f5f5f5; font-size: 0.875em;}
+  .assets-search-result .no-data{padding: 2em 0; text-align: center; color: #666; font-size: 0.75em;}
+
+  .assets-add{padding: 2em 1em;}
+  .form-input{margin-bottom: 2em; align-items: flex-start;}
+  .form-input input{flex-grow: 1; padding: 0.25em 0.5em; background-color: transparent; border-bottom: 1px solid #a5a5a5; font-size: 1em;}
+  .form-input span{padding-top: 0.35em; width: 6.5em; font-size: 0.875em; color: #666;}
+  .form-input textarea{flex-grow: 1; padding: 0.5em; border: 1px solid #a5a5a5; font-size: 1em; resize: none;}
+  .form-input textarea:focus{outline: none;}
+  .assets-add-action{margin-top: 3em; text-align: center;}
+  .assets-add-action button{width: 100%;}
 
   @media screen and (max-width: 480px) {
     .content{padding: 1em 0 0; min-height: auto;}
